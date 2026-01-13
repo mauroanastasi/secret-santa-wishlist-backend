@@ -1,0 +1,28 @@
+CREATE DATABASE IF NOT EXISTS secret_santa;
+USE secret_santa;
+
+CREATE TABLE wishlists (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  owner_name VARCHAR(100) NULL,
+  title VARCHAR(200) NOT NULL,
+  secret_link VARCHAR(36) UNIQUE,
+  is_published BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE gifts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  wishlist_id INT NOT NULL,
+  gift_name VARCHAR(200) NOT NULL,
+  image_url TEXT NOT NULL,
+  link TEXT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  priority_gift INT NOT NULL CHECK (priority_gift >= 1 AND priority_gift <= 5),
+  notes TEXT,
+  is_reserved BOOLEAN DEFAULT FALSE,
+  reservation_message TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (wishlist_id) REFERENCES wishlists(id) ON DELETE CASCADE
+);
