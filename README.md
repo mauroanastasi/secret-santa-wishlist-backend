@@ -8,3 +8,5 @@ creo file db.js per connessione a database MySQL e variabili d'ambiente:
 gestione errori middleware
 controller per wishlist
 controller per gift
+router per wishlist
+router per gift
