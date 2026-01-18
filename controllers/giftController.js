@@ -3,9 +3,11 @@ import pool from '../data/db.js';
 // Crea un nuovo regalo
 export const createGift = async (req, res, next) => {
     try {
+        console.log('POST /api/gifts - Body ricevuto:', req.body);
         const { wishlist_id, gift_name, image_url, link, price, priority_gift, notes } = req.body;
 
         if (!wishlist_id || !gift_name || !image_url || !link || !price || !priority_gift) {
+            console.error('Campi mancanti:', { wishlist_id, gift_name, image_url, link, price, priority_gift });
             return res.status(400).json({ error: 'All required fields must be provided' });
         }
 
