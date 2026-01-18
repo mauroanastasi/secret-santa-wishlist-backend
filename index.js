@@ -1,17 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import giftRoutes from './routes/giftRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
-
-dotenv.config();
-
-
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 
 // Configurazione CORS
 const corsOptions = {
@@ -20,19 +14,32 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 
-
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Health check endpoint (root)
+app.get('/', (req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'Backend is running',
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
+
+// API base endpoint (per test frontend)
+app.get('/api', (req, res) => {
+    res.json({
+        message: 'Secret Santa Wishlist API',
+        version: '1.0.0'
+    });
+});
 
 // Routes
 app.use('/api/wishlists', wishlistRoutes);
 app.use('/api/gifts', giftRoutes);
 
-
-// Error handler
+// Error handler (deve essere DOPO tutte le routes)
 app.use(errorHandler);
-
 
 // Solo per sviluppo locale
 if (process.env.NODE_ENV !== 'production') {
@@ -42,6 +49,5 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
-
-// Esporta per Vercel
+// Esporto per Vercel
 export default app;

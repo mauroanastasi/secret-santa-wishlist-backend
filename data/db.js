@@ -1,19 +1,30 @@
-import mysql from 'mysql2';
-import dotenv from 'dotenv';
+import mysql from 'mysql2/promise';
 
-dotenv.config();
-
+// Configurazione per Railway (produzione) o locale (sviluppo)
 const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    host: process.env.MYSQLHOST || 'localhost',
+    port: parseInt(process.env.MYSQLPORT) || 3306,
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '',
+    database: process.env.MYSQLDATABASE || 'secret_santa',
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    connectTimeout: 10000
 });
 
-const promisePool = pool.promise();
+// Test connessione al startup
+pool.getConnection()
+    .then(connection => {
+        console.log('✅ MySQL Database connected successfully');
+        console.log(`📍 Host: ${process.env.MYSQLHOST || 'localhost'}`);
+        console.log(`📍 Port: ${process.env.MYSQLPORT || 3306}`);
+        console.log(`📍 Database: ${process.env.MYSQLDATABASE || 'secret_santa'}`);
+        connection.release();
+    })
+    .catch(err => {
+        console.error('❌ MySQL connection error:', err.message);
+        console.error('Full error:', err);
+    });
 
-export default promisePool;
+export default pool;
