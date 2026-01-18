@@ -1,4 +1,4 @@
-import pool from '../config/db.js';
+import pool from '../data/db.js';
 
 // Crea un nuovo regalo
 export const createGift = async (req, res, next) => {
