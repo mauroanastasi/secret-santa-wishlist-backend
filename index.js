@@ -41,7 +41,7 @@ app.use('/api/gifts', giftRoutes);
 // Error handler (deve essere DOPO tutte le routes)
 app.use(errorHandler);
 
-// Solo per sviluppo locale
+// Avvia il server SOLO in development locale
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
